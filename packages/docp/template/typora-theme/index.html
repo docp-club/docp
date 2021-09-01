@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title id="#docp-title"></title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1, maximum-scale=1">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="./typora.vue.css">
+  <link rel="stylesheet" href="./index.css">
+  <link rel="stylesheet" href="./prism.min.css">
+  <link rel="stylesheet" href="./prism-line-numbers.min.css">
+  {{{styles}}}
+  <script src="./prism.min.js"></script>
+  <script src="./prism-line-numbers.min.js"></script>
+</head>
+
+<body>
+  {{#header}}
+  <div id="docp-header">
+    <div class="docp-logo-wrapper">
+      {{#header.logo}}
+      <img class="docp-logo" src="{{header.logo}}">
+      {{/header.logo}}
+      {{#header.name}}
+      <div class="docp-name">{{header.name}}</div>
+      {{/header.name}}
+    </div>
+    <div class="docp-nav">
+      {{#header.navigation}}
+      <a href="{{href}}" target="{{target}}">{{value}}</a>
+      {{/header.navigation}}
+    </div>
+  </div>
+  {{/header}}
+  <div class="main">
+    <div id="docp-menu">
+      <!-- display when max-width less 1024 -->
+      <div class="docp-menu-header">
+        <div class="docp-hamburger">
+          <div class="docp-line1"></div>
+          <div class="docp-line2"></div>
+          <div class="docp-line3"></div>
+        </div>
+      </div>
+      {{{menu}}}
+    </div>
+    <!-- className markdown-body used by themes style-->
+    <div id="docp-content" class="markdown-body">{{{content}}}</div>
+    <p id="docp-support">Powered by <a rel="noopener noreferrer" href="https://github.com/cicel/docp" target="_blank">Docp</a></p>
+  </div>
+</body>
+<script>
+  // hamburger button when max-width less 1024
+  var menu = document.querySelector('#docp-menu')
+  var hamburger = document.querySelector('.docp-hamburger')
+  if (hamburger) {
+    hamburger.addEventListener('click', function () {
+      // add/remove active status to hamburger btn
+      if (hamburger.classList.contains('active')) {
+        hamburger.classList.remove('active')
+        menu.classList.remove('show')
+      } else {
+        hamburger.classList.add('active')
+        menu.classList.add('show')
+      }
+    })
+  }
+  // highlight current menu
+  var menuItems = document.querySelectorAll('#docp-menu a')
+  for (var i = 0; i < menuItems.length; i++) {
+    var hrefName = menuItems[i].getAttribute('href')
+    if (hrefName && location.href.indexOf(hrefName) > -1) {
+      menuItems[i].classList.add('current')
+    }
+  }
+</script>
+{{{scripts}}}
+
+</html>

@@ -1,0 +1,59 @@
+{
+  "name": "docp",
+  "version": "0.10.0",
+  "description": "a tool execute javascript in markdown",
+  "main": "lib/index.js",
+  "bin": {
+    "docp": "lib/cli.js"
+  },
+  "homepage": "https://github.com/Cicel/docp",
+  "files": [
+    "lib",
+    "template"
+  ],
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc --build tsconfig.json",
+    "lint": "eslint src/** --quiet",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "doc": "docp build --rootDir ./docs/zh-cn --outDir ./zh-cn && docp build --rootDir ./docs/en --outDir ./en",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "cicel",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "commander": "^5.0.0",
+    "fs-extra": "^8.1.0",
+    "glob": "^7.1.4",
+    "inquirer": "^7.1.0",
+    "js-beautify": "^1.11.0",
+    "marked": "^3.0.2",
+    "memfs": "^3.2.0",
+    "mime": "^2.4.4",
+    "mustache": "^4.2.0",
+    "node-html-parser": "^3.3.4",
+    "node-watch": "^0.6.3",
+    "obj2str": "^0.1.2",
+    "through2": "^4.0.2",
+    "typescript": "^4.3.2",
+    "unionfs": "^4.4.0",
+    "vinyl": "^2.2.0",
+    "vinyl-fs": "^3.0.3",
+    "ws": "^7.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-syntax-jsx": "^7.7.4",
+    "@babel/plugin-transform-react-display-name": "^7.7.4",
+    "@babel/plugin-transform-react-jsx": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-react": "^7.7.4",
+    "@types/node": "^13.7.0",
+    "@types/vinyl": "^2.0.4",
+    "@typescript-eslint/eslint-plugin": "^4.25.0 ",
+    "@typescript-eslint/parser": "^4.25.0",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.8.0"
+  }
+}

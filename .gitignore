@@ -1,0 +1,15 @@
+node_modules
+dist
+dest
+.vscode
+.DS_Store
+example
+lib
+.tsbuildinfo
+todo.txt
+docsite
+loaders
+doc.png
+logo.png
+_docp.config.js
+lerna-debug.log

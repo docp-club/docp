@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "target": "ES6",
+    "noImplicitThis": false,
+    "sourceMap": true,
+    "declaration": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "paths": {
+      "docp/*": ["packages/docp/*"]
+    },
+
+  },
+  "include": ["packages/**/*", "typings.d.ts"],
+  "exclude": ["node_modules", "lib"]
+}
