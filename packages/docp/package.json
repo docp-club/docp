@@ -55,5 +55,6 @@
     "@typescript-eslint/parser": "^4.25.0",
     "babel-loader": "^8.0.6",
     "eslint": "^6.8.0"
-  }
+  },
+  "gitHead": "fb5b36c6f9e108df9d56ae1db6845cb5bef90e49"
 }

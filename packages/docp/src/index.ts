@@ -40,12 +40,12 @@ export function parse(input: string, output: string): PassThrough {
   const source = vfs.src(input);
   let result = source.pipe(filters()).pipe(parser());
   const plugins = docpConfig.plugins;
-  const parsers = docpConfig.template.parsers || [];
-  plugins.forEach(plugin => {
+  const parsers = docpConfig.template.parsers;
+  plugins?.forEach(plugin => {
     const { module, options } = plugin;
     result = result.pipe(module.default?.(options) || module(options));
   });
-  parsers.forEach(item => {
+  parsers?.forEach(item => {
     result = result.pipe(item.default?.() || item());
   });
   return result.pipe(dest(output));
@@ -78,7 +78,8 @@ export function build(finishHandler?: () => void): PassThrough {
     fse.removeSync(outputDir);
   }
   return parse(docpConfig.filePath, docpConfig.outputPath).on('finish', () => {
-    fse.copySync(path.resolve(__dirname, '../template/assets'), outputDir + '/assets');
+    // TODO 输出逻辑无法适配自定义theme
+    fse.copySync(path.resolve(__dirname, '../template/' + docpConfig.theme + '/assets'), outputDir + '/assets');
     printLog.success('website generated at: ' + outputDir);
     if (typeof finishHandler === 'function') {
       finishHandler();
