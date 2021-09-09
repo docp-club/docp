@@ -38,12 +38,18 @@ interface AnyObject {
 
 interface DocpPlugin {
   type: string;
-  module: any;
+  module: Function;
   options: any;
 }
 
 interface DocpTemplate {
   path?: string,
-  value?: string,
-  parsers?: any[]
+  value?: string
+}
+
+interface DocpParser {
+  // parser执行时机hook，dest之前、之后、后续可扩展
+  // 默认都在beforeDest之前调用
+  beforeDest?: Array<Function>,
+  afterDest?: Array<Function>
 }

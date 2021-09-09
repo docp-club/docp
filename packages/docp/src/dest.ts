@@ -5,9 +5,9 @@ import mustache from 'mustache';
 import { PassThrough } from 'stream';
 import docpConfig from './docp-config';
 
+let summary = '';
 export = function (destPath: string): PassThrough {
   const list: ParseResult[] = [];
-  let summary = '';
   return through2.obj(function (parseResult: ParseResult, enc, callback) {
     const { type, value } = parseResult;
     if (type === 'summary') {
@@ -17,7 +17,7 @@ export = function (destPath: string): PassThrough {
     }
     callback();
   }, function (callback) { // flush function
-    const templateValue = docpConfig.template.value;
+    const templateValue = docpConfig.template;
     fs2.mkdirSync(destPath, { recursive: true });
     for (let i = 0; i < list.length; i++) {
       const result = list[i];

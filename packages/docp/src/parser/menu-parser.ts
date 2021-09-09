@@ -9,7 +9,7 @@ import through2 from 'through2';
 import { parse, HTMLElement } from 'node-html-parser';
 import { PassThrough } from 'stream';
 
-export = function (): PassThrough {
+export = function (docpConfig): PassThrough {
   return through2.obj(function (parseResult: ParseResult, enc, callback) {
     const { file, type, value } = parseResult;
     if (type !== 'summary') {
@@ -24,10 +24,10 @@ export = function (): PassThrough {
 
     const traverseMenuList = (root: HTMLElement, deep = 0) => {
       if (root.nodeType !== 1) {
-        return
+        return;
       }
       if (root.tagName.toLowerCase() === 'ul') {
-        deep++
+        deep++;
       } else if (root.tagName.toLowerCase() === 'a') {
         root.classList.add('deep-' + deep);
         // 替换href中连接后缀
@@ -37,12 +37,12 @@ export = function (): PassThrough {
         }
       }
       for (let i = 0; i < root.childNodes.length; i++) {
-        traverseMenuList(root.childNodes[i] as HTMLElement, deep)
+        traverseMenuList(root.childNodes[i] as HTMLElement, deep);
       }
-    }
+    };
 
     traverseMenuList(summary);
-    const newResult = { file, type: 'summary', value: summary.outerHTML }
+    const newResult = { file, type: 'summary', value: summary.outerHTML };
     this.push(newResult);
     callback();
   });

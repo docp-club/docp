@@ -36,7 +36,6 @@
     "node-watch": "^0.6.3",
     "obj2str": "^0.1.2",
     "through2": "^4.0.2",
-    "typescript": "^4.3.2",
     "unionfs": "^4.4.0",
     "vinyl": "^2.2.0",
     "vinyl-fs": "^3.0.3",
@@ -54,7 +53,8 @@
     "@typescript-eslint/eslint-plugin": "^4.25.0 ",
     "@typescript-eslint/parser": "^4.25.0",
     "babel-loader": "^8.0.6",
-    "eslint": "^6.8.0"
+    "eslint": "^6.8.0",
+    "typescript": "^4.4.2"
   },
   "gitHead": "fb5b36c6f9e108df9d56ae1db6845cb5bef90e49"
 }

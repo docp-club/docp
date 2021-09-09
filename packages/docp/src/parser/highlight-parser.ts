@@ -1,7 +1,7 @@
 import through2 from 'through2';
 import { PassThrough } from 'stream';
 
-export = function (): PassThrough {
+export = function (docpConfig): PassThrough {
   return through2.obj(function (parseResult: ParseResult, enc, callback) {
     const { codes = [], type, args = {} } = parseResult;
     if (type !== 'content') {

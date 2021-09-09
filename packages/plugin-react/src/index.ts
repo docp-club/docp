@@ -1,6 +1,5 @@
 import through2 from 'through2';
 import fs2 from 'docp/lib/fs2';
-import docpConfig from 'docp/lib/docp-config';
 import webpack from 'webpack';
 import { ensureWebpackMemoryFs } from './utils';
 import util from 'util';
@@ -9,7 +8,7 @@ import path from 'path';
 const webpackConfig = require('../webpack.config')
 const scripts = ['https://cdnjs.cloudflare.com/ajax/libs/react/17.0.0/umd/react.production.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.0/umd/react-dom.production.min.js']
 
-export = function (options) {
+export = function (docpConfig, options) {
   return through2.obj(async function (parseResult, enc, callback) {
     const { file, execCodes = [], args = {} } = parseResult;
     const reactCodes = execCodes.filter(code => code.execType === 'react')

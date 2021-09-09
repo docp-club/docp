@@ -4,8 +4,13 @@ import beautify from 'js-beautify';
 import { obj2str } from 'obj2str';
 import fs from 'fs';
 
+
 class DocpConfig implements IDocpConfig {
-  private _template: DocpTemplate | null = null
+  private _template: string | null = null
+  // TODO 自定义parsers覆盖（而不是拼接）内置parser
+  private _parsers: DocpParser = {
+    beforeDest: [require('./parser/highlight-parser'), require('./parser/menu-parser')]
+  }
 
   rootDir = ''
   outDir = 'docsite'
@@ -27,37 +32,28 @@ class DocpConfig implements IDocpConfig {
   // 可执行代码的编译模块
   plugins: DocpPlugin[] = []
 
-  get template(): DocpTemplate {
-    if (this._template) {
-      return this._template;
+  // 自定义解析模块
+  set parsers(value: Function[] | DocpParser) {
+    if (value.toString() === '[object Object]') {
+      this._parsers = value as DocpParser
+    } else {
+      this._parsers.beforeDest = value as Function[]
     }
-    const highlightParser = require('./parser/highlight-parser');
-    const menuParser = require('./parser/menu-parser');
-    const defaultPath = path.resolve(__dirname, '../template/' + this.theme + '/index.html');
-    this._template = {
-      path: defaultPath,
-      value: fs.readFileSync(defaultPath).toString(),
-      parsers: [menuParser, highlightParser]
-    };
-    return this._template;
   }
 
-  set template(value: string | DocpTemplate) {
-    if (typeof value === 'string') {
-      this._template = {
-        path: value,
-        value: fs.readFileSync(value).toString(),
-        parsers: []
-      };
-    } else if (value.toString() === '[object Object]') {
-      const { path = '', parsers = [] } = value;
-      this._template = {
-        path: path,
-        value: fs.readFileSync(path).toString(),
-        parsers: parsers
-      };
-    }
+  get parsers(): DocpParser {
+    return this._parsers;
   }
+
+  templatePath: string = ''
+
+  get template(): string {
+    if (!this._template) {
+      this._template = fs.readFileSync(this.templatePath).toString()
+    }
+    return this._template
+  }
+
   get filePath(): string {
     if (this.file) {
       return path.resolve(process.cwd(), this.file);
