@@ -36,7 +36,7 @@ export async function init(): Promise<void> {
   printLog.success('init done!');
 }
 
-export function parse(input: string, output: string): PassThrough {
+export function parse(input: string): PassThrough {
   const source = vfs.src(input);
   let result = source.pipe(filters()).pipe(parser());
   const plugins = docpConfig.plugins;
@@ -48,14 +48,15 @@ export function parse(input: string, output: string): PassThrough {
   parsers?.forEach(item => {
     result = result.pipe(item.default?.() || item());
   });
-  return result.pipe(dest(output));
+  return result;
+  // return result.pipe(dest(output));
 }
 
 export function serve(): void {
   // start server
   startServer();
   // first build
-  parse(docpConfig.filePath, docpConfig.virtualDir).pipe(printURL());
+  parse(docpConfig.filePath).pipe(dest(docpConfig.virtualDir)).pipe(printURL());
   // watch
   watch(docpConfig.fileDir, (evt, path) => {
     if (path.split('.').pop() !== 'md') {
@@ -67,8 +68,8 @@ export function serve(): void {
     }
     // summary变更触发全量更新
     path.endsWith(docpConfig.summary) ?
-      parse(docpConfig.filePath, docpConfig.virtualDir) :
-      parse(path, docpConfig.virtualDir);
+      parse(docpConfig.filePath).pipe(dest(docpConfig.virtualDir)) :
+      parse(path).pipe(dest(docpConfig.virtualDir));
   });
 }
 
@@ -77,7 +78,7 @@ export function build(finishHandler?: () => void): PassThrough {
   if (fse.pathExistsSync(outputDir)) {
     fse.removeSync(outputDir);
   }
-  return parse(docpConfig.filePath, docpConfig.outputPath).on('finish', () => {
+  return parse(docpConfig.filePath).pipe(dest(docpConfig.outputPath)).on('finish', () => {
     // TODO 输出逻辑无法适配自定义theme
     fse.copySync(path.resolve(__dirname, '../template/' + docpConfig.theme + '/assets'), outputDir + '/assets');
     printLog.success('website generated at: ' + outputDir);
