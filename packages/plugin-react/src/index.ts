@@ -9,7 +9,7 @@ import path from 'path';
 const webpackConfig = require('../webpack.config')
 const scripts = ['https://cdnjs.cloudflare.com/ajax/libs/react/17.0.0/umd/react.production.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.0/umd/react-dom.production.min.js']
 
-export default function (options) {
+export = function (options) {
   return through2.obj(async function (parseResult, enc, callback) {
     const { file, execCodes = [], args = {} } = parseResult;
     const reactCodes = execCodes.filter(code => code.execType === 'react')

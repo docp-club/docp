@@ -17,7 +17,7 @@ program
   .option('--file <path>')
   .option('--config <path>')
   .option('--port <port>')
-  .option('--configPath <path>')
+  .option('--configFile <path>')
   .option('--template <path>')
   .option('--scripts <string[]>')
   .option('--styles <string[]>')
@@ -38,16 +38,9 @@ if (process.argv.length === 2 || process.argv.indexOf('--help') > -1 || process.
   console.log('  --outDir           Specifies the directory for output files. Default to ./docsite.');
   console.log('  --file             Specifies the file to be compiled.');
   console.log('  --port             Specify local server port.');
-  console.log('  --configPath       Specify the configuration file path when init.');
+  console.log('  --configFile       Specify the configuration file path when init.');
   console.log('  --template         Specify the HTML template to replace the built-in template.');
   process.exit(0);
-}
-
-// 存在配置文件优先使用
-if (docpConfig.hasConfigFile) {
-  const configFile = docpConfig.configFileDir;
-  const docpConfigFile = require(configFile);
-  docpConfig.concatConfigs(docpConfigFile);
 }
 
 // argv转config
@@ -67,6 +60,12 @@ while (args.length > 0) {
   }
 }
 docpConfig.concatConfigs(configs);
+
+// 存在配置文件优先使用
+if (docpConfig.hasConfigFile) {
+  const docpConfigFile = require(docpConfig.configFileDir);
+  docpConfig.concatConfigs(docpConfigFile);
+}
 
 const script = process.argv[2];
 

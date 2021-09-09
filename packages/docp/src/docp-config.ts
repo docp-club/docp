@@ -4,9 +4,7 @@ import beautify from 'js-beautify';
 import { obj2str } from 'obj2str';
 import fs from 'fs';
 
-const configFileName = 'docp.config.js';
-
-export class DocpConfig implements IDocpConfig {
+class DocpConfig implements IDocpConfig {
   private _template: DocpTemplate | null = null
 
   rootDir = ''
@@ -17,7 +15,7 @@ export class DocpConfig implements IDocpConfig {
   // 不要对外暴露，不可改
   summary = 'summary'
   port = 3000
-  configPath = ''
+  configFile = 'docp.config.js'
   args: IDocpArgs = {}
   showExecCode = false
   marked: MarkedOption = {
@@ -87,7 +85,7 @@ export class DocpConfig implements IDocpConfig {
   }
 
   get configFileDir(): string {
-    return path.resolve(process.cwd(), this.configPath, configFileName);
+    return path.resolve(process.cwd(), this.configFile);
   }
 
   get hasConfigFile(): boolean {
@@ -119,4 +117,4 @@ export class DocpConfig implements IDocpConfig {
 
 }
 
-export default new DocpConfig();
+export = new DocpConfig();

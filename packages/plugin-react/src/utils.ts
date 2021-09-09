@@ -16,5 +16,3 @@ export const ensureWebpackMemoryFs = (fs) => {
 
   return nextFs;
 };
-
-export default {}

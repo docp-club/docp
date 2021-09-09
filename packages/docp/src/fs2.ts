@@ -20,4 +20,4 @@ fs2.writeFileSync = function (file, ...args) {
 // alias
 fs2.on = event.on.bind(event);
 
-export default fs2;
+export = fs2;

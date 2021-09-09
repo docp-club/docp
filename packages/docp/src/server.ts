@@ -6,7 +6,7 @@ import docpConfig from './docp-config';
 import { printLog } from './utils';
 import fs2 from './fs2';
 import { Server } from 'ws';
-export default function (): void {
+export = function (): void {
   const injectHTML = Buffer.from(`<script>
     (function() {
       var protocol = location.protocol === 'http:' ? 'ws://' : 'wss://';

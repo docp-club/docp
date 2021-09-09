@@ -9,7 +9,7 @@ import through2 from 'through2';
 import { parse, HTMLElement } from 'node-html-parser';
 import { PassThrough } from 'stream';
 
-export default function (): PassThrough {
+export = function (): PassThrough {
   return through2.obj(function (parseResult: ParseResult, enc, callback) {
     const { file, type, value } = parseResult;
     if (type !== 'summary') {

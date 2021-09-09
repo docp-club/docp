@@ -3,7 +3,7 @@ import { parse } from 'node-html-parser';
 import { escapeEntity } from './utils';
 import { PassThrough } from 'stream';
 
-export default function (): PassThrough {
+export = function (): PassThrough {
   return through2.obj(function (parseResult: ParseResult, enc, callback) {
     const { value, execCodes = [] } = parseResult;
     if (execCodes.length === 0) {

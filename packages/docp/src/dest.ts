@@ -5,7 +5,7 @@ import mustache from 'mustache';
 import { PassThrough } from 'stream';
 import docpConfig from './docp-config';
 
-export default function (destPath: string): PassThrough {
+export = function (destPath: string): PassThrough {
   const list: ParseResult[] = [];
   let summary = '';
   return through2.obj(function (parseResult: ParseResult, enc, callback) {

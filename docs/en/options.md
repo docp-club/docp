@@ -7,7 +7,7 @@ Here is the list of options that  `Docp` supported.
 | rootDir    | command line args, configuration file | string          | current directory | Specifies the root directory of input files                  |
 | outDir     | command line args, configuration file | string          | docsite           | Specifies the directory for output files                     |
 | port       | command line args, configuration file | number          | 3000              | Specify local server port                                    |
-| configPath | command line args                     | string          | docp.config.js    | Specify the configuration file path when init                |
+| configFile | command line args                     | string          | docp.config.js    | Specify the configuration file path when init                |
 | template   | command line args, configuration file | string          | N/A               | Specify the HTML template to replace the built-in template   |
 | scripts    | configuration file                    | Array\<string\> | N/A               | External scripts included in HTML template, Commonly used for public libraries like React or Vue |
 | styles     | configuration file                    | Array\<string\> | N/A               | External styles included in HTML template                    |

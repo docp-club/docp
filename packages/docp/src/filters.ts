@@ -3,7 +3,7 @@ import through2 from 'through2';
 import Vinyl from 'vinyl';
 import docpConfig from './docp-config';
 
-export default function (): PassThrough {
+export = function (): PassThrough {
   const result: Array<Vinyl> = [];
   return through2.obj(function (file, enc, callback) {
     if (file.extname !== '.md') {

@@ -12,7 +12,7 @@ import { printLog, parseInfoString, wrapCodeBlock } from './utils';
 import { PassThrough } from 'stream';
 import docpConfig from './docp-config';
 
-export default function (): PassThrough {
+export = function (): PassThrough {
   return through2.obj(async function (file: Vinyl, enc: string, callback: () => void) {
     printLog.success(`compiling ${file.path} `);
 
