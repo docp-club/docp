@@ -1,11 +1,11 @@
 import through2 from 'through2';
 import { PassThrough } from 'stream';
 
-export = function (docpConfig): PassThrough {
-  return through2.obj(function (parseResult: ParseResult, enc, callback) {
-    const { codes = [], type, args = {} } = parseResult;
-    if (type !== 'content') {
-      this.push(parseResult);
+export = function (): PassThrough {
+  return through2.obj(function (file, enc, callback) {
+    const { codes = [], docpConfig } = file;
+    if (codes.length === 0) {
+      this.push(file);
       return callback();
     }
     const getHighlightComponentByType = (type: string) => {
@@ -23,16 +23,16 @@ export = function (docpConfig): PassThrough {
       }
       return null;
     };
-    if (!args.scripts) {
-      args.scripts = [];
+    if (!Array.isArray(docpConfig.scripts)) {
+      docpConfig.scripts = [];
     }
     codes.forEach(code => {
       const highlight = getHighlightComponentByType(code.infostring);
-      if (highlight && args.scripts.indexOf(highlight) === -1) {
-        args.scripts.push(highlight);
+      if (highlight && docpConfig.scripts.indexOf(highlight) === -1) {
+        docpConfig.scripts.push(highlight);
       }
     });
-    this.push(parseResult);
+    this.push(file);
     callback();
   });
 }

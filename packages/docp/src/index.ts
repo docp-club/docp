@@ -5,9 +5,11 @@ import inquirer from 'inquirer';
 import { PassThrough } from 'stream';
 import fse from 'fs-extra';
 import fs2 from './fs2';
-import parser from './parser';
+import parsingSummary from './parsing-summary';
+import parsing from './parsing';
+import rendering from './rendering';
+import output from './output';
 import startServer from './server';
-import dest from './dest';
 import docpConfig from './docp-config';
 import { inputOverride, inputRootDir, inputOutDir, selectTheme } from './prompt-action';
 import { printLog } from './utils';
@@ -27,28 +29,31 @@ export async function init(): Promise<void> {
   }
   const { theme } = await inquirer.prompt([selectTheme]);
   const { rootDir, outDir } = await inquirer.prompt([inputRootDir, inputOutDir]);
-  newConfig.templatePath = path.resolve(__dirname, '../template/', theme, 'index.html');
+  newConfig.templatePath = path.resolve(__dirname, '../template/', theme);
   newConfig.rootDir = rootDir;
   newConfig.outDir = outDir;
   newConfig.outputConfigFile();
   printLog.success('init done!');
 }
 
-export function parse(input: string, output: string): PassThrough {
-  const source = vfs.src(input);
-  let result = source.pipe(filters()).pipe(parser());
-  const plugins = docpConfig.plugins;
-  const { beforeDest, afterDest } = docpConfig.parsers;
+export function parse(inputPath: string, outputPath: string, summaryPath?: string): PassThrough {
+  const source = vfs.src(inputPath);
+  let result = source.pipe(filters()).pipe(parsingSummary(summaryPath)).pipe(parsing());
+  const { plugins, afterParsing, afterRendering, afterOutput } = docpConfig;
   plugins?.forEach(plugin => {
     const { module, options } = plugin;
-    result = result.pipe(module(docpConfig, options));
+    result = result.pipe(module(options));
   });
-  beforeDest?.forEach(item => {
-    result = result.pipe(item(docpConfig));
+  afterParsing.forEach(item => {
+    result = result.pipe(item());
   });
-  result.pipe(dest(output));
-  afterDest?.forEach(item => {
-    result = result.pipe(item(docpConfig));
+  result.pipe(rendering());
+  afterRendering.forEach(item => {
+    result = result.pipe(item());
+  });
+  result.pipe(output(outputPath));
+  afterOutput.forEach(item => {
+    result = result.pipe(item());
   })
   return result;
 }
@@ -57,7 +62,10 @@ export function serve(): void {
   // start server
   startServer();
   // first build
-  parse(docpConfig.filePath, docpConfig.virtualDir).pipe(printURL());
+  const input = docpConfig.filePath
+  const output = docpConfig.virtualDir
+  const summary = path.resolve('./', docpConfig.rootDir, docpConfig.summary)
+  parse(input, output, summary).pipe(printURL());
   // watch
   watch(docpConfig.fileDir, (evt, path) => {
     if (path.split('.').pop() !== 'md') {
@@ -69,22 +77,19 @@ export function serve(): void {
     }
     // summary变更触发全量更新
     path.indexOf(docpConfig.summary) > -1 ?
-      parse(docpConfig.filePath, docpConfig.virtualDir) :
-      parse(path, docpConfig.virtualDir);
+      parse(input, output, summary) :
+      parse(path, output);
   });
 }
 
-export function build(finishHandler?: () => void): PassThrough {
+export function build(): PassThrough {
   const outputDir = path.resolve(docpConfig.outDir);
   if (fse.pathExistsSync(outputDir)) {
     fse.removeSync(outputDir);
   }
-  return parse(docpConfig.filePath, docpConfig.outputPath).on('finish', () => {
-    // TODO 输出逻辑无法适配自定义theme
-    fse.copySync(path.resolve(__dirname, '../' + docpConfig.templatePath + '/assets'), outputDir + '/assets');
+  return parse(docpConfig.filePath, docpConfig.outputPath, path.resolve('./', docpConfig.rootDir, docpConfig.summary)).on('finish', () => {
+    // TODO 过滤模板html
+    fse.copySync(docpConfig.templatePath, outputDir);
     printLog.success('website generated at: ' + outputDir);
-    if (typeof finishHandler === 'function') {
-      finishHandler();
-    }
   });
 }

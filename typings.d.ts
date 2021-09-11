@@ -5,21 +5,32 @@ interface MarkedOption {
 }
 
 interface IDocpConfig {
-  src?: string;
-  dest?: string;
-  args?: IDocpArgs;
-}
+  rootDir: string;
+  outDir: string;
+  summary: string;
+  port: number;
+  showExecCode: boolean;
+  marked: MarkedOption;
+  virtualDir: string;
+  plugins: DocpPlugin[];
+  templatePath: string;
+  template: string;
+  file: string;
+  filePath: string;
+  fileDir: string;
+  outputPath: string;
+  configFile: string;
+  configFilePath: string;
+  hasConfigFile: boolean;
+  theme: string;
+  themeList: string[];
+  // 几个hooks
+  afterParsing: Function[];
+  afterRendering: Function[];
+  afterOutput: Function[];
 
-interface ParseResult {
-  file: Vinyl,
-  type: string,
-  value: string,
-  codes?: Code[],
-  execCodes?: Executable[],
-  args?: AnyObject
+  [propName: string]: any;
 }
-
-declare type IDocpArgs = Record<string, string>;
 
 interface Executable {
   containerId: string;
@@ -45,11 +56,4 @@ interface DocpPlugin {
 interface DocpTemplate {
   path?: string,
   value?: string
-}
-
-interface DocpParser {
-  // parser执行时机hook，dest之前、之后、后续可扩展
-  // 默认都在beforeDest之前调用
-  beforeDest?: Array<Function>,
-  afterDest?: Array<Function>
 }

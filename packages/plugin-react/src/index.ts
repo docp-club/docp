@@ -8,12 +8,12 @@ import path from 'path';
 const webpackConfig = require('../webpack.config')
 const scripts = ['https://cdnjs.cloudflare.com/ajax/libs/react/17.0.0/umd/react.production.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.0/umd/react-dom.production.min.js']
 
-export = function (docpConfig, options) {
-  return through2.obj(async function (parseResult, enc, callback) {
-    const { file, execCodes = [], args = {} } = parseResult;
+export = function (options) {
+  return through2.obj(async function (file, enc, callback) {
+    const { execCodes = [], docpConfig } = file;
     const reactCodes = execCodes.filter(code => code.execType === 'react')
     if (execCodes.length === 0 || reactCodes.length === 0) {
-      this.push(parseResult);
+      this.push(file);
       return callback();
     }
     webpackConfig.entry = {};
@@ -24,15 +24,15 @@ export = function (docpConfig, options) {
       webpackConfig.entry[file.stem + '|' + containerId] = filePath
     })
     const result = await build(webpackConfig)
-    if (!Array.isArray(args.scripts)) {
-      args.scripts = []
+    if (!Array.isArray(docpConfig.scripts)) {
+      docpConfig.scripts = []
     }
-    args.scripts.push(scripts.map(url => `<script src="${url}"></script>`).join('\n'))
+    docpConfig.scripts.push(scripts.map(url => `<script src="${url}"></script>`).join('\n'))
     for (const i in result) {
       const output = fs2.readFileSync('/dist/' + result[i]).toString()
-      args.scripts.push(`<script>${output}</script>`)
+      docpConfig.scripts.push(`<script>${output}</script>`)
     }
-    this.push(parseResult)
+    this.push(file)
     callback()
   });
 }

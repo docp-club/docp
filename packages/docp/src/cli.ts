@@ -15,12 +15,9 @@ program
   .option('--rootDir <dir>')
   .option('--outDir <dir>')
   .option('--file <path>')
-  .option('--config <path>')
   .option('--port <port>')
   .option('--configFile <path>')
-  .option('--template <path>')
-  .option('--scripts <string[]>')
-  .option('--styles <string[]>')
+  .option('--templatePath <path>')
   .parse(process.argv);
 
 // show help
@@ -39,13 +36,13 @@ if (process.argv.length === 2 || process.argv.indexOf('--help') > -1 || process.
   console.log('  --file             Specifies the file to be compiled.');
   console.log('  --port             Specify local server port.');
   console.log('  --configFile       Specify the configuration file path when init.');
-  console.log('  --template         Specify the HTML template to replace the built-in template.');
+  console.log('  --templatePath         Specify the HTML template to replace the built-in template.');
   process.exit(0);
 }
 
 // argv转config
 const args = program.rawArgs;
-const configs: IDocpConfig = {};
+const configs = {};
 while (args.length > 0) {
   const arg = args.shift();
   const nextArg = args[0];
@@ -59,11 +56,12 @@ while (args.length > 0) {
     }
   }
 }
-docpConfig.concatConfigs(configs);
+// concat configs
+docpConfig.concatConfigs(configs as IDocpConfig);
 
 // 存在配置文件优先使用
 if (docpConfig.hasConfigFile) {
-  const docpConfigFile = require(docpConfig.configFileDir);
+  const docpConfigFile = require(docpConfig.configFilePath);
   docpConfig.concatConfigs(docpConfigFile);
 }
 
@@ -80,9 +78,9 @@ if (script === 'init') {
 }
 
 process.on('uncaughtException', function (err: Error) {
-  printLog.error(err.message);
+  // printLog.error(err.message);
 });
 
 process.on('unhandledRejection', function (reason: unknown) {
-  printLog.error(reason as string);
+  // printLog.error(reason as string);
 });

@@ -13,7 +13,7 @@ export const printLog = {
   },
   warn: (msg: string): void => {
     const color = colors.yellow;
-    const tag = '[warinig]';
+    const tag = '[warning]';
     console.log(tag, color(msg));
   },
   error: (msg: string): void => {

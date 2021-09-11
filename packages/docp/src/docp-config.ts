@@ -1,16 +1,11 @@
 import path from 'path';
 import fse from 'fs-extra';
 import beautify from 'js-beautify';
-import { obj2str } from 'obj2str';
 import fs from 'fs';
 
 
 class DocpConfig implements IDocpConfig {
   private _template: string | null = null
-  // TODO 自定义parsers覆盖（而不是拼接）内置parser
-  private _parsers: DocpParser = {
-    beforeDest: [require('./parser/highlight-parser'), require('./parser/menu-parser')]
-  }
 
   rootDir = ''
   outDir = 'docsite'
@@ -18,10 +13,9 @@ class DocpConfig implements IDocpConfig {
   file = ''
   theme = this.themeList[0]
   // 不要对外暴露，不可改
-  summary = 'summary'
+  summary = 'summary.md'
   port = 3000
   configFile = 'docp.config.js'
-  args: IDocpArgs = {}
   showExecCode = false
   marked: MarkedOption = {
     breaks: true,
@@ -32,24 +26,12 @@ class DocpConfig implements IDocpConfig {
   // 可执行代码的编译模块
   plugins: DocpPlugin[] = []
 
-  // 自定义解析模块
-  set parsers(value: Function[] | DocpParser) {
-    if (value.toString() === '[object Object]') {
-      this._parsers = value as DocpParser
-    } else {
-      this._parsers.beforeDest = value as Function[]
-    }
-  }
-
-  get parsers(): DocpParser {
-    return this._parsers;
-  }
-
   templatePath: string = ''
 
   get template(): string {
     if (!this._template) {
-      this._template = fs.readFileSync(this.templatePath).toString()
+      const tplFile = path.resolve(this.templatePath, 'index.html');
+      this._template = fs.readFileSync(tplFile).toString()
     }
     return this._template
   }
@@ -80,12 +62,12 @@ class DocpConfig implements IDocpConfig {
     return path.resolve(process.cwd(), this.outDir);
   }
 
-  get configFileDir(): string {
+  get configFilePath(): string {
     return path.resolve(process.cwd(), this.configFile);
   }
 
   get hasConfigFile(): boolean {
-    return fse.pathExistsSync(this.configFileDir);
+    return fse.pathExistsSync(this.configFilePath);
   }
 
   get themeList(): string[] {
@@ -104,12 +86,18 @@ class DocpConfig implements IDocpConfig {
     const result = `module.exports = {
         rootDir: '${this.rootDir}',
         outDir: '${this.outDir}',
-        theme: '${this.theme}',
-        plugins: {},
-        args: ${obj2str(this.args)}
+        templatePath: '${this.templatePath}',
+        plugins: {}
       }`;
-    fse.outputFileSync(this.configFileDir, beautify.js(result, { 'indent_size': 2 }));
+    fse.outputFileSync(this.configFilePath, beautify.js(result, { 'indent_size': 2 }));
   }
+
+  // TODO 自定义会覆盖
+  afterParsing: Function[] = [require('./parser/highlight-parser')]
+
+  afterRendering: Function[] = []
+
+  afterOutput: Function[] = []
 
 }
 

@@ -13,15 +13,7 @@ import { PassThrough } from 'stream';
 import docpConfig from './docp-config';
 
 export = function (): PassThrough {
-  return through2.obj(async function (file: Vinyl, enc: string, callback: () => void) {
-    printLog.success(`compiling ${file.path} `);
-
-    if (file.stem === docpConfig.summary) {
-      const result = marked(file.contents?.toString() || '', docpConfig.marked);
-      const parseResult: ParseResult = { file, type: 'summary', value: result, args: { ...docpConfig.args } };
-      this.push(parseResult);
-      return callback();
-    }
+  return through2.obj(function (file: Vinyl, enc: string, callback) {
 
     const renderer = new marked.Renderer();
     // 所有代码块
@@ -61,9 +53,12 @@ export = function (): PassThrough {
     renderer.code = newRenderCode();
     const options = Object.assign({}, docpConfig.marked, { renderer: renderer });
     const contents = file.contents?.toString() || '';
-    const htmlString = marked(contents, options);
-    const parseResult: ParseResult = { file, type: 'content', value: htmlString, codes, execCodes, args: { ...docpConfig.args } };
-    this.push(parseResult);
+    file.doc = marked(contents, options);
+    file.codes = codes;
+    file.execCodes = execCodes;
+    file.docpConfig = docpConfig;
+    this.push(file);
     callback();
+    printLog.success(`compiling ${file.path} `);
   });
 }

@@ -33,8 +33,7 @@ export = function (): void {
     const ext = path.parse(urlPathname).ext;
     const mimeType = mime.getType(ext);
     const htmlPath = docpConfig.virtualDir + urlPathname;
-    // TODO 无法适配自定义模板
-    const assetPath = path.resolve(__dirname, '../' + docpConfig.templatePath + '/assets') + urlPathname;
+    const assetPath = docpConfig.templatePath + urlPathname;
     const filePath = fs2.existsSync(htmlPath) ? htmlPath : assetPath;
     // 读取静态文件
     try {
