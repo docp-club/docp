@@ -26,11 +26,12 @@ class DocpConfig implements IDocpConfig {
   // 可执行代码的编译模块
   plugins: DocpPlugin[] = []
 
-  templatePath: string = ''
+  templatePath: string = path.resolve(__dirname, '../template/', this.themeList[0]); // 模板路径，包含模板文件index.html和assets文件
+  templateFile: string = '' // 模板文件，与templatePath中的index.html互斥
 
   get template(): string {
     if (!this._template) {
-      const tplFile = path.resolve(this.templatePath, 'index.html');
+      const tplFile = this.templateFile || path.resolve(this.templatePath, 'index.html');
       this._template = fs.readFileSync(tplFile).toString()
     }
     return this._template
@@ -87,7 +88,7 @@ class DocpConfig implements IDocpConfig {
         rootDir: '${this.rootDir}',
         outDir: '${this.outDir}',
         templatePath: '${this.templatePath}',
-        plugins: {}
+        plugins: []
       }`;
     fse.outputFileSync(this.configFilePath, beautify.js(result, { 'indent_size': 2 }));
   }
@@ -97,7 +98,7 @@ class DocpConfig implements IDocpConfig {
 
   afterRendering: Function[] = []
 
-  afterOutput: Function[] = []
+  afterDest: Function[] = []
 
 }
 

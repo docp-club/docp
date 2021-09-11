@@ -36,10 +36,10 @@ export async function init(): Promise<void> {
   printLog.success('init done!');
 }
 
-export function parse(inputPath: string, outputPath: string, summaryPath?: string): PassThrough {
+export function parse(inputPath: string, summaryPath?: string): PassThrough {
   const source = vfs.src(inputPath);
   let result = source.pipe(filters()).pipe(parsingSummary(summaryPath)).pipe(parsing());
-  const { plugins, afterParsing, afterRendering, afterOutput } = docpConfig;
+  const { plugins, afterParsing, afterRendering } = docpConfig;
   plugins?.forEach(plugin => {
     const { module, options } = plugin;
     result = result.pipe(module(options));
@@ -47,14 +47,10 @@ export function parse(inputPath: string, outputPath: string, summaryPath?: strin
   afterParsing.forEach(item => {
     result = result.pipe(item());
   });
-  result.pipe(rendering());
+  result = result.pipe(rendering());
   afterRendering.forEach(item => {
     result = result.pipe(item());
   });
-  result.pipe(output(outputPath));
-  afterOutput.forEach(item => {
-    result = result.pipe(item());
-  })
   return result;
 }
 
@@ -62,10 +58,8 @@ export function serve(): void {
   // start server
   startServer();
   // first build
-  const input = docpConfig.filePath
-  const output = docpConfig.virtualDir
   const summary = path.resolve('./', docpConfig.rootDir, docpConfig.summary)
-  parse(input, output, summary).pipe(printURL());
+  parse(docpConfig.filePath, summary).pipe(output(docpConfig.virtualDir)).pipe(printURL());
   // watch
   watch(docpConfig.fileDir, (evt, path) => {
     if (path.split('.').pop() !== 'md') {
@@ -77,8 +71,8 @@ export function serve(): void {
     }
     // summary变更触发全量更新
     path.indexOf(docpConfig.summary) > -1 ?
-      parse(input, output, summary) :
-      parse(path, output);
+      parse(docpConfig.filePath, summary).pipe(output(docpConfig.virtualDir)) :
+      parse(path).pipe(output(docpConfig.virtualDir));
   });
 }
 
@@ -87,7 +81,11 @@ export function build(): PassThrough {
   if (fse.pathExistsSync(outputDir)) {
     fse.removeSync(outputDir);
   }
-  return parse(docpConfig.filePath, docpConfig.outputPath, path.resolve('./', docpConfig.rootDir, docpConfig.summary)).on('finish', () => {
+  let result = parse(docpConfig.filePath, path.resolve('./', docpConfig.rootDir, docpConfig.summary)).pipe(output(docpConfig.outputPath))
+  docpConfig.afterDest?.forEach(item => {
+    result = result.pipe(item());
+  })
+  return result.on('finish', () => {
     // TODO 过滤模板html
     fse.copySync(docpConfig.templatePath, outputDir);
     printLog.success('website generated at: ' + outputDir);
