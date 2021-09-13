@@ -27,7 +27,7 @@ interface IDocpConfig {
   // 几个hooks
   afterParsing: Function[];
   afterRendering: Function[];
-  afterOutput: Function[];
+  afterDest: Function[];
 
   [propName: string]: any;
 }

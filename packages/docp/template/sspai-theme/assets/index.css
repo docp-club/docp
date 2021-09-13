@@ -4,6 +4,7 @@
   justify-content: center;
   position: relative;
   padding: 0 32px;
+  height: auto;
 }
 
 #docp-header {
@@ -14,6 +15,10 @@
   box-shadow: 0 3px 8px 0 rgba(116, 129, 141, 0.1);
   align-items: center;
   justify-content: center;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 999;
 }
 
 .docp-logo-wrapper {
@@ -50,18 +55,17 @@
 }
 
 #docp-menu {
-  height: calc(100vh - 80px);
-  overflow: auto;
   box-sizing: border-box;
   flex-grow: 0;
   flex-shrink: 0;
   width: 210px;
   margin-right: 32px;
-  position: sticky;
   top: 0;
-  padding-bottom: 60px;
   font-size: 14px;
   -ms-overflow-style: none;
+  max-height: calc(100vh - 80px);
+  overflow: auto;
+  position: sticky;
 }
 
 #docp-menu::-webkit-scrollbar {
@@ -69,7 +73,7 @@
 }
 
 #docp-menu ul {
-  padding: 0
+  padding: 0;
 }
 
 #docp-menu li {
@@ -109,10 +113,11 @@
 #docp-content {
   width: 1023px;
   min-width: 360px;
-  min-height: calc(100vh - 80px);
   box-sizing: border-box;
   -ms-overflow-style: none;
-  padding-bottom: 48px;
+  position: relative;
+  height: calc(100vh - 80px);
+  overflow: auto;
 }
 
 #docp-content::-webkit-scrollbar {
@@ -130,10 +135,11 @@
 
 #docp-support {
   width: 100%;
-  bottom: 0;
-  left: 0;
+  bottom: -62px;
+  /* left: 0; */
   text-align: center;
   position: absolute;
+  /* margin-top: 40px; */
 }
 
 .docp-block {
