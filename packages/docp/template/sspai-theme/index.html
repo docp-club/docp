@@ -69,11 +69,20 @@
   }
   // highlight current menu
   var menuItems = document.querySelectorAll('#docp-menu a')
+  var selectedItem = null
   for (var i = 0; i < menuItems.length; i++) {
     var hrefName = menuItems[i].getAttribute('href')
-    if (hrefName && location.href.indexOf(hrefName) > -1) {
+    var url = new URL(hrefName, location.href)
+    if (hrefName && location.href === url.href) {
+      selectedItem = menuItems[i]
       menuItems[i].classList.add('current')
     }
+  }
+  // selectedItem scroll to top
+  if (selectedItem) {
+    var menuContainer = document.querySelector('#docp-menu')
+    var itemY = selectedItem.getBoundingClientRect().y
+    menuContainer.scrollTo(0, itemY - 100)
   }
 </script>
 {{{scripts}}}

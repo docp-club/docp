@@ -17,7 +17,7 @@ program
   .option('--file <path>')
   .option('--port <port>')
   .option('--configFile <path>')
-  .option('--templatePath <path>')
+  .option('--templateFile <path>')
   .parse(process.argv);
 
 // show help
@@ -36,7 +36,7 @@ if (process.argv.length === 2 || process.argv.indexOf('--help') > -1 || process.
   console.log('  --file             Specifies the file to be compiled.');
   console.log('  --port             Specify local server port.');
   console.log('  --configFile       Specify the configuration file path when init.');
-  console.log('  --templatePath         Specify the HTML template to replace the built-in template.');
+  console.log('  --templateFile     Specify the HTML template to replace the built-in template.');
   process.exit(0);
 }
 
