@@ -187,6 +187,7 @@ body {
   #docp-menu {
     border-right: 1px solid #aaa;
     padding-top: 12px;
+    box-sizing: border-box;
   }
   #docp-content {
     padding-left: 48px;
