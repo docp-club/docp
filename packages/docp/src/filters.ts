@@ -8,12 +8,6 @@ export = function (): PassThrough {
       return callback();
     }
     this.push(file)
-    // // 先编译summary
-    // if (file.basename === docpConfig.summary) {
-    //   result.unshift(file);
-    //   return callback();
-    // }
-    // result.push(file);
     callback();
   });
 }

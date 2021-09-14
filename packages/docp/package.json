@@ -1,12 +1,12 @@
 {
   "name": "docp",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "a tool execute javascript in markdown",
   "main": "lib/index.js",
   "bin": {
     "docp": "lib/cli.js"
   },
-  "homepage": "https://github.com/Cicel/docp",
+  "homepage": "https://github.com/docp-club/docp",
   "files": [
     "lib",
     "template"

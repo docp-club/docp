@@ -85,9 +85,5 @@ export function build(): PassThrough {
   docpConfig.afterDest?.forEach(item => {
     result = result.pipe(item());
   })
-  return result.on('finish', () => {
-    // TODO 过滤模板html
-    fse.copySync(docpConfig.templatePath, outputDir);
-    printLog.success('website generated at: ' + outputDir);
-  });
+  return result;
 }

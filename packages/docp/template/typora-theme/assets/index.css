@@ -51,7 +51,9 @@ body {
 }
 
 .docp-nav a {
-  margin-right: 32px;
+  margin-right: 36px;
+  font-weight: normal;
+  color: #404040;
 }
 
 .docp-nav a:last-child {
@@ -184,9 +186,11 @@ body {
 @media (min-width: 1023px) {
   #docp-menu {
     border-right: 1px solid #aaa;
+    padding-top: 12px;
   }
   #docp-content {
     padding-left: 48px;
+    padding-top: 16px;
   }
 }
 
