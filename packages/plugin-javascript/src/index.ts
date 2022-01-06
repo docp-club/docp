@@ -13,8 +13,7 @@ export = function (options) {
     execCodes.filter((code: Executable) => code.execType === 'javascript').forEach(code => {
       const wrapper = document.querySelector('#' + code.containerId);
       const escapeValue = escapeEntity(code.codeString);
-      // TODO resizeIframe not defined
-      const iframe = parse(`<iframe frameborder="0" onload="resizeIframe(this)" srcdoc="${escapeValue}"></iframe>`);
+      const iframe = parse(`<iframe width="100%" height="100%" frameborder="0" srcdoc="${escapeValue}"></iframe>`);
       wrapper.appendChild(iframe);
     });
     file.doc = document.outerHTML;

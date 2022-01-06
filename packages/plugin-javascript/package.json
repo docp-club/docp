@@ -1,6 +1,6 @@
 {
   "name": "@docp/javascript-plugin",
-  "version": "0.10.3",
+  "version": "0.10.5",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-html-parser": "^4.1.4",
+    "node-html-parser": "^5.2.0",
     "through2": "^4.0.2"
   },
   "peerDependencies": {
