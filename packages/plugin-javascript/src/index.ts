@@ -14,7 +14,10 @@ export = function (options) {
       const wrapper = document.querySelector('#' + code.containerId);
       const escapeValue = escapeEntity(code.codeString);
       const iframe = parse(`<iframe width="100%" height="100%" frameborder="0" srcdoc="${escapeValue}"></iframe>`);
-      wrapper.appendChild(iframe);
+      // fix node-html-parser 解析iframe丢失闭合标签
+      // @ts-ignore: Unreachable code error
+      iframe.childNodes[0]._rawText = iframe.childNodes[0]._rawText + '</iframe>'
+      wrapper?.appendChild(iframe);
     });
     file.doc = document.outerHTML;
     this.push(file);
