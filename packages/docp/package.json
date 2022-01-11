@@ -1,6 +1,6 @@
 {
   "name": "docp",
-  "version": "0.10.6",
+  "version": "0.10.7",
   "description": "a tool execute javascript in markdown",
   "main": "lib/index.js",
   "bin": {
@@ -22,7 +22,7 @@
   "author": "cicel",
   "license": "MIT",
   "dependencies": {
-    "colors": "^1.4.0",
+    "colors": "1.4.0",
     "commander": "^5.0.0",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.4",
