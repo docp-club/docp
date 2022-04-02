@@ -34,6 +34,7 @@
   </div>
   {{/header}}
   <div class="main">
+    {{#menu}}
     <div id="docp-menu">
       <!-- display when max-width less 1024 -->
       <div class="docp-menu-header">
@@ -45,6 +46,7 @@
       </div>
       {{{menu}}}
     </div>
+    {{/menu}}
     <!-- className markdown-body used by themes style-->
     <div id="docp-content" class="markdown-body">
       {{{content}}}
