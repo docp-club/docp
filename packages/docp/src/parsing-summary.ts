@@ -40,12 +40,12 @@ export = function (summaryPath: string | undefined): PassThrough {
       const file = fse.readFileSync(summaryPath).toString()
       const markedString = marked(file || '', docpConfig.marked);
       const templateDOM = parse(markedString);
-      const summaryDOM: HTMLElement = templateDOM.querySelector('ul');
+      const summaryDOM: HTMLElement | null = templateDOM.querySelector('ul');
       if (summaryDOM) {
         traverseMenuList(summaryDOM);
+        summary = summaryDOM.outerHTML
       }
-      summary = summaryDOM.outerHTML
-    } catch(err) {
+    } catch (err) {
       // TODO 隐藏
       // file nor exist
       throw err

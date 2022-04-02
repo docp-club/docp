@@ -82,7 +82,9 @@ export function build(): PassThrough {
   if (fse.pathExistsSync(outputDir)) {
     fse.removeSync(outputDir);
   }
-  let result = parse(docpConfig.filePath, path.resolve('./', docpConfig.rootDir, docpConfig.summary)).pipe(output(docpConfig.outputPath))
+  const summaryPath = path.resolve('./', docpConfig.rootDir, docpConfig.summary)
+  const summary = fse.pathExistsSync(summaryPath) ? summaryPath : undefined;
+  let result = parse(docpConfig.filePath, summary).pipe(output(docpConfig.outputPath))
   docpConfig.afterDest?.forEach(item => {
     result = result.pipe(item());
   })
