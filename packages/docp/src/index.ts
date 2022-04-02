@@ -58,7 +58,8 @@ export function serve(): void {
   // start server
   startServer();
   // first build
-  const summary = path.resolve('./', docpConfig.rootDir, docpConfig.summary)
+  const summaryPath = path.resolve('./', docpConfig.rootDir, docpConfig.summary)
+  const summary = fse.pathExistsSync(summaryPath) ? summaryPath : undefined;
   parse(docpConfig.filePath, summary).pipe(output(docpConfig.virtualDir)).pipe(printURL());
   // watch
   watch(docpConfig.fileDir, (evt, path) => {

@@ -1,6 +1,6 @@
 {
   "name": "docp",
-  "version": "0.10.7",
+  "version": "0.10.8",
   "description": "a tool execute javascript in markdown",
   "main": "lib/index.js",
   "bin": {
